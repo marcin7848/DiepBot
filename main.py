@@ -1,15 +1,11 @@
-import tkinter, win32api, win32con, pywintypes
 from Point import Point
-import time
 from Points import Points
 
 points = Points()
-points.add_point(Point('TestA', 'blue', '200', '200'))
-points.add_point(Point('TestB', 'red', '300', '300'))
+points.add_point(Point([0, 0, 250], 200, 200))
+points.add_point(Point([250, 0, 0], 300, 300))
 
-points.draw_letter()
+while True:
+    points.draw_points()
 
 
-time.sleep(2)
-print('test')
-#letter.remove_letter()

@@ -1,10 +1,8 @@
-import tkinter
-from tkinter import *
-from threading import Thread
+import time
 
-import pywintypes
-import win32api
-import win32con
+import win32gui, win32ui, win32api, win32con
+from win32api import GetSystemMetrics
+from threading import Thread
 
 
 class Points:
@@ -14,29 +12,24 @@ class Points:
     def add_point(self, point):
         self.points.append(point)
 
-    def __draw_letter(self):
-        root = Tk()
-        root.geometry('1920x1080')
+    def __draw_points(self):
+        #self.remove_points()
+        dc = win32gui.GetDC(0)
+
         for point in self.points:
-            label = tkinter.Label(root, text=point.letter, font=('Times New Roman', '40'), fg=point.color, bg='black')
-            label.master.overrideredirect(True)
-            #label.master.geometry(f"+{point.y}")
-            label.master.lift()
-            label.master.wm_attributes("-topmost", True)
-            label.master.wm_attributes("-disabled", True)
-            label.master.wm_attributes("-transparentcolor", "black")
-            label.place(x=point.x, y=point.y)
+            color = win32api.RGB(point.color[0], point.color[1], point.color[2])
+            for x in range(10):
+                for y in range(10):
+                    win32gui.SetPixel(dc, point.x + x, point.y+y, color)
 
-            hWindow = pywintypes.HANDLE(int(label.master.frame(), 16))
-            exStyle = win32con.WS_EX_COMPOSITED | win32con.WS_EX_LAYERED | win32con.WS_EX_NOACTIVATE | win32con.WS_EX_TOPMOST | win32con.WS_EX_TRANSPARENT
-            win32api.SetWindowLong(hWindow, win32con.GWL_EXSTYLE, exStyle)
-            label.pack()
 
-        root.mainloop()
-
-    def draw_letter(self):
-        thread = Thread(target=self.__draw_letter)
+    def draw_points(self):
+        thread = Thread(target=self.__draw_points)
         thread.start()
 
-    #def remove_letter(self):
-        #self.thread.
+    @staticmethod
+    def remove_points():
+        hwnd = win32gui.WindowFromPoint((0, 0))
+        monitor = (0, 0, GetSystemMetrics(0), GetSystemMetrics(1))
+        win32gui.RedrawWindow(hwnd, monitor, None, win32con.RDW_INVALIDATE)
+

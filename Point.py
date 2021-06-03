@@ -1,6 +1,5 @@
 class Point:
-    def __init__(self, letter, color, x, y):
-        self.letter = letter
+    def __init__(self, color, x, y):
         self.color = color
         self.x = x
         self.y = y
