@@ -18,8 +18,8 @@ class Points:
 
         for point in self.points:
             color = win32api.RGB(point.color[0], point.color[1], point.color[2])
-            for x in range(10):
-                for y in range(10):
+            for x in range(15):
+                for y in range(15):
                     win32gui.SetPixel(dc, point.x + x, point.y+y, color)
 
 
