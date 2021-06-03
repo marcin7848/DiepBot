@@ -4,7 +4,6 @@ from Point import Point
 from Points import Points
 import PIL.ImageGrab
 import numpy as np
-import cv2
 
 '''
 points = Points()
