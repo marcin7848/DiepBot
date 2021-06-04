@@ -24,7 +24,6 @@ class Points:
                 for y in range(15):
                     win32gui.SetPixel(dc, point.x + x, point.y+y, color)
 
-
     def draw_points(self):
         thread = Thread(target=self.__draw_points)
         thread.start()
@@ -41,9 +40,9 @@ class Points:
         colors_boundaries_to_eat = [
             [255, 232, 105],  # yellow
             [252, 118, 119],  # red
-            [118, 141, 252]  # blue
+            [118, 141, 252],  # blue
+            [241, 119, 221]  # pink
         ]
-
         screen = np.array(screen)
         center_of_screen_x = int(width / 2)
         center_of_screen_y = int(height / 2)
