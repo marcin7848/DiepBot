@@ -35,16 +35,16 @@ while True:
     (enemy_x, enemy_y) = queue_enemy.get()
     if enemy_x != -1:
         points.add_point(Point([0, 0, 250], enemy_x, enemy_y))
-        pyautogui.moveTo(enemy_x, enemy_y)
+        #pyautogui.moveTo(enemy_x, enemy_y)
     else:
         thread_points_to_eat.join()
         (xPoints, yPoints, points_idx) = queue_points_to_eat.get()
-        #for idx in points_idx:
-            #points.add_point(Point([0, 0, 250], xPoints[idx], yPoints[idx]))
+        for idx in points_idx:
+            points.add_point(Point([0, 0, 250], xPoints[idx], yPoints[idx]))
 
         if len(points_idx) > 0:
             index = random.choice(points_idx)
-            pyautogui.moveTo(xPoints[index], yPoints[index])
+            #pyautogui.moveTo(xPoints[index], yPoints[index])
 
 
 
@@ -54,5 +54,5 @@ while True:
     #if friend_x != -1:
         #points.add_point(Point([0, 0, 250], friend_x, friend_y))
 
-    #points.draw_points()
+    points.draw_points()
 

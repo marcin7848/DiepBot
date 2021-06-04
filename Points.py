@@ -80,47 +80,29 @@ class Points:
 
         return x_points, y_points, points_idx
 
-    @staticmethod
-    def detect_closest_enemy(screen, width, height):
+    def detect_closest_enemy(self, screen, width, height):
         colors_boundaries_enemies = [
             [0, 178, 225],  # blue
             [0, 225, 110],  # green
             [191, 127, 245]  # purple
         ]
-        center_of_screen_x = int(width / 2)
-        center_of_screen_y = int(height / 2)
-        y_points = []
-        x_points = []
+        return self.__detect_closest_point(colors_boundaries_enemies, screen, width, height)
 
-        for rgb in colors_boundaries_enemies:
-            p_y, p_x = np.where(np.all(screen == rgb, axis=2))
-            y_points.extend(p_y)
-            x_points.extend(p_x)
+    def detect_closest_friend(self, screen, width, height):
+        colors_boundaries_friends = [
+            [88, 88, 88]  # grey
+        ]
 
-        closest_point_idx = -1
-        distance = 999999
-
-        for idx in range(len(x_points)):
-            dist = math.hypot(center_of_screen_x - x_points[idx], center_of_screen_y - y_points[idx])
-            if distance > dist:
-                distance = dist
-                closest_point_idx = idx
-
-        if closest_point_idx == -1:
-            return -1, -1
-
-        return x_points[closest_point_idx], y_points[closest_point_idx]
+        return self.__detect_closest_point(colors_boundaries_friends, screen, width, height)
 
     @staticmethod
-    def detect_closest_friend(screen, width, height):
-        colors_boundaries_enemies = [
-            [88,88,88]  # grey
-        ]
+    def __detect_closest_point(colors_boundaries, screen, width, height):
         center_of_screen_x = int(width / 2)
         center_of_screen_y = int(height / 2)
         y_points = []
         x_points = []
-        for rgb in colors_boundaries_enemies:
+
+        for rgb in colors_boundaries:
             p_y, p_x = np.where(np.all(screen == rgb, axis=2))
             y_points.extend(p_y)
             x_points.extend(p_x)
