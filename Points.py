@@ -40,45 +40,15 @@ class Points:
         monitor = (0, 0, GetSystemMetrics(0), GetSystemMetrics(1))
         win32gui.RedrawWindow(hwnd, monitor, None, win32con.RDW_INVALIDATE)
 
-    @staticmethod
-    def detect_points_to_eat(screen, width, height):
+    def detect_point_to_eat(self, screen, width, height):
         colors_boundaries_to_eat = [
             [255, 232, 105],  # yellow
             [252, 118, 119],  # red
             [118, 141, 252],  # blue
             [241, 119, 221]  # pink
         ]
-        center_of_screen_x = int(width / 2)
-        center_of_screen_y = int(height / 2)
-        y_points = []
-        x_points = []
 
-        for rgb in colors_boundaries_to_eat:
-            p_y, p_x = np.where(np.all(screen == rgb, axis=2))
-            y_points.extend(p_y)
-            x_points.extend(p_x)
-
-        points_idx = []
-
-        for idx in range(len(x_points)):
-            similar_point_idx = -1
-            for ex_idx in range(len(points_idx)):
-                dist = math.hypot(x_points[idx] - x_points[points_idx[ex_idx]],
-                                  y_points[idx] - y_points[points_idx[ex_idx]])
-                if dist <= 60:
-                    similar_point_idx = ex_idx
-                    break
-
-            if similar_point_idx == -1:
-                points_idx.append(idx)
-            else:
-                similar_point_dist = math.hypot(center_of_screen_x - x_points[points_idx[similar_point_idx]],
-                                                center_of_screen_y - y_points[points_idx[similar_point_idx]])
-                dist = math.hypot(center_of_screen_x - x_points[idx], center_of_screen_y - y_points[idx])
-                if dist < similar_point_dist:
-                    points_idx[similar_point_idx] = idx
-
-        return x_points, y_points, points_idx
+        return self.__detect_closest_point(colors_boundaries_to_eat, screen, width, height)
 
     def detect_closest_enemy(self, screen, width, height):
         colors_boundaries_enemies = [
