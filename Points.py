@@ -106,5 +106,8 @@ class Points:
                 distance = dist
                 closest_point_idx = idx
 
+        if closest_point_idx == -1:
+            return -1, -1
+
         return x_points[closest_point_idx], y_points[closest_point_idx]
 
