@@ -1,4 +1,6 @@
 import math
+import os
+import sys
 import time
 
 from Point import Point
@@ -6,6 +8,7 @@ from Points import Points
 import queue
 from threading import Thread
 import pyautogui
+import keyboard
 
 queue_enemy = queue.Queue()
 queue_point_to_eat = queue.Queue()
@@ -97,18 +100,32 @@ def upgrade_tank():
     upgrade_tank()
 
 
+def break_loop(break_list):
+    keyboard.wait("p")
+    break_list.append(True)
+    print('P')
+    os._exit(0)
+
+
 thread_upgrade = Thread(target=upgrade_tank)
 thread_upgrade.start()
 
-while True:
+break_list = []
+thread_break_loop = Thread(target=break_loop, args=(break_list,))
+thread_break_loop.start()
+
+while not break_list:
     points = Points()
     (screenx, widthx, heightx) = points.get_screen()
-
-    thread_shooting = Thread(target=shooting, args=(screenx, widthx, heightx))
-    thread_shooting.start()
 
     thread_moving = Thread(target=moving, args=(screenx, widthx, heightx))
     thread_moving.start()
 
-    #points.draw_points()
+    #thread_shooting = Thread(target=shooting, args=(screenx, widthx, heightx))
+    #thread_shooting.start()
+
+
+
+    # points.draw_points()
+
 
