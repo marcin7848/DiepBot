@@ -21,10 +21,7 @@ def find_point_to_eat(screen, width, height):
     queue_point_to_eat.put((point_x, point_y))
 
 
-while True:
-    points = Points()
-    (screen, width, height) = points.get_screen()
-
+def shooting(screen, width, height):
     thread_enemy = Thread(target=find_enemy, args=(screen, width, height))
     thread_enemy.start()
 
@@ -42,6 +39,14 @@ while True:
         if point_x != -1:
             points.add_point(Point([0, 0, 250], point_x, point_y))
             pyautogui.moveTo(point_x, point_y)
+
+
+while True:
+    points = Points()
+    (screen, width, height) = points.get_screen()
+
+    thread_shooting = Thread(target=shooting, args=(screen, width, height))
+    thread_shooting.start()
 
 
     #(friend_x, friend_y) = points.detect_closest_friend(screen, width, height)
