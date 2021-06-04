@@ -111,3 +111,30 @@ class Points:
 
         return x_points[closest_point_idx], y_points[closest_point_idx]
 
+    @staticmethod
+    def detect_closest_friend(screen, width, height):
+        colors_boundaries_enemies = [
+            [88,88,88]  # grey
+        ]
+        center_of_screen_x = int(width / 2)
+        center_of_screen_y = int(height / 2)
+        y_points = []
+        x_points = []
+        for rgb in colors_boundaries_enemies:
+            p_y, p_x = np.where(np.all(screen == rgb, axis=2))
+            y_points.extend(p_y)
+            x_points.extend(p_x)
+
+        closest_point_idx = -1
+        distance = 999999
+
+        for idx in range(len(x_points)):
+            dist = math.hypot(center_of_screen_x - x_points[idx], center_of_screen_y - y_points[idx])
+            if distance > dist:
+                distance = dist
+                closest_point_idx = idx
+
+        if closest_point_idx == -1:
+            return -1, -1
+
+        return x_points[closest_point_idx], y_points[closest_point_idx]
