@@ -81,6 +81,25 @@ def moving(screen, width, height):
         #points.add_point(Point([0, 0, 250], friend_x, friend_y))
 
 
+def upgrade_tank():
+    for i in range(10):
+        pyautogui.press('6')
+    for i in range(10):
+        pyautogui.press('7')
+    for i in range(10):
+        pyautogui.press('4')
+    for i in range(10):
+        pyautogui.press('5')
+    for i in range(10):
+        pyautogui.press('2')
+
+    time.sleep(5)
+    upgrade_tank()
+
+
+thread_upgrade = Thread(target=upgrade_tank)
+thread_upgrade.start()
+
 while True:
     points = Points()
     (screenx, widthx, heightx) = points.get_screen()
