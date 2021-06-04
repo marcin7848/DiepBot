@@ -23,10 +23,8 @@ colors_boundaries = [
 ]
 
 screen = np.array(screen)
-center_of_screen_y = int(width / 2)
-center_of_screen_x = int(height / 2)
-closest_point_idx = -1
-distance = 999999
+center_of_screen_x = int(width / 2)
+center_of_screen_y = int(height / 2)
 yPoints = []
 xPoints = []
 
@@ -35,15 +33,29 @@ for rgb in colors_boundaries:
     yPoints.extend(pY)
     xPoints.extend(pX)
 
+points_idx = []
+
 for idx in range(len(xPoints)):
-    dist = math.hypot(center_of_screen_x - xPoints[idx], center_of_screen_y - yPoints[idx])
-    if distance > dist:
-        distance = dist
-        closest_point_idx = idx
+    similar_point_idx = -1
+    for ex_idx in range(len(points_idx)):
+        dist = math.hypot(xPoints[idx] - xPoints[points_idx[ex_idx]], yPoints[idx] - yPoints[points_idx[ex_idx]])
+        if dist <= 60:
+            similar_point_idx = ex_idx
+            break
 
-if closest_point_idx > -1:
-    points = Points()
-    points.add_point(Point([0, 0, 250], xPoints[closest_point_idx], yPoints[closest_point_idx]))
+    if similar_point_idx == -1:
+        points_idx.append(idx)
+    else:
+        similar_point_dist = math.hypot(center_of_screen_x - xPoints[points_idx[similar_point_idx]], center_of_screen_y - yPoints[points_idx[similar_point_idx]])
+        dist = math.hypot(center_of_screen_x - xPoints[idx], center_of_screen_y - yPoints[idx])
+        if dist < similar_point_dist:
+            points_idx[similar_point_idx] = idx
 
-    while True:
-        points.draw_points()
+
+points = Points()
+for idx in points_idx:
+    points.add_point(Point([0, 0, 250], xPoints[idx], yPoints[idx]))
+
+while True:
+    points.draw_points()
+
