@@ -28,6 +28,12 @@ class Points:
         thread = Thread(target=self.__draw_points)
         thread.start()
 
+    def get_screen(self):
+        screen = PIL.ImageGrab.grab()
+        width, height = screen.size
+        screen = np.array(screen)
+        return screen, width, height
+
     @staticmethod
     def remove_points():
         hwnd = win32gui.WindowFromPoint((0, 0))
@@ -35,16 +41,13 @@ class Points:
         win32gui.RedrawWindow(hwnd, monitor, None, win32con.RDW_INVALIDATE)
 
     @staticmethod
-    def detect_points_to_eat():
-        screen = PIL.ImageGrab.grab()
-        width, height = screen.size
+    def detect_points_to_eat(screen, width, height):
         colors_boundaries_to_eat = [
             [255, 232, 105],  # yellow
             [252, 118, 119],  # red
             [118, 141, 252],  # blue
             [241, 119, 221]  # pink
         ]
-        screen = np.array(screen)
         center_of_screen_x = int(width / 2)
         center_of_screen_y = int(height / 2)
         y_points = []
