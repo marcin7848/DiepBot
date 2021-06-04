@@ -34,7 +34,8 @@ class Points:
         monitor = (0, 0, GetSystemMetrics(0), GetSystemMetrics(1))
         win32gui.RedrawWindow(hwnd, monitor, None, win32con.RDW_INVALIDATE)
 
-    def detect_points_to_eat(self):
+    @staticmethod
+    def detect_points_to_eat():
         screen = PIL.ImageGrab.grab()
         width, height = screen.size
         colors_boundaries_to_eat = [
@@ -46,21 +47,21 @@ class Points:
         screen = np.array(screen)
         center_of_screen_x = int(width / 2)
         center_of_screen_y = int(height / 2)
-        yPoints = []
-        xPoints = []
+        y_points = []
+        x_points = []
 
         for rgb in colors_boundaries_to_eat:
-            pY, pX = np.where(np.all(screen == rgb, axis=2))
-            yPoints.extend(pY)
-            xPoints.extend(pX)
+            p_y, p_x = np.where(np.all(screen == rgb, axis=2))
+            y_points.extend(p_y)
+            x_points.extend(p_x)
 
         points_idx = []
 
-        for idx in range(len(xPoints)):
+        for idx in range(len(x_points)):
             similar_point_idx = -1
             for ex_idx in range(len(points_idx)):
-                dist = math.hypot(xPoints[idx] - xPoints[points_idx[ex_idx]],
-                                  yPoints[idx] - yPoints[points_idx[ex_idx]])
+                dist = math.hypot(x_points[idx] - x_points[points_idx[ex_idx]],
+                                  y_points[idx] - y_points[points_idx[ex_idx]])
                 if dist <= 60:
                     similar_point_idx = ex_idx
                     break
@@ -68,12 +69,11 @@ class Points:
             if similar_point_idx == -1:
                 points_idx.append(idx)
             else:
-                similar_point_dist = math.hypot(center_of_screen_x - xPoints[points_idx[similar_point_idx]],
-                                                center_of_screen_y - yPoints[points_idx[similar_point_idx]])
-                dist = math.hypot(center_of_screen_x - xPoints[idx], center_of_screen_y - yPoints[idx])
+                similar_point_dist = math.hypot(center_of_screen_x - x_points[points_idx[similar_point_idx]],
+                                                center_of_screen_y - y_points[points_idx[similar_point_idx]])
+                dist = math.hypot(center_of_screen_x - x_points[idx], center_of_screen_y - y_points[idx])
                 if dist < similar_point_dist:
                     points_idx[similar_point_idx] = idx
 
-        return xPoints, yPoints, points_idx
-
+        return x_points, y_points, points_idx
 
