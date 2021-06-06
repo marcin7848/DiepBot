@@ -1,6 +1,5 @@
 import math
 import os
-import sys
 import time
 
 from Point import Point
@@ -132,17 +131,18 @@ def move_up_down(points):
     time.sleep(0.1)
     move_up_down(points)
 
+
 def upgrade_tank():
     for i in range(10):
-        pyautogui.press('6')
+        pyautogui.press('6', _pause=False, interval=0.01)
     for i in range(10):
-        pyautogui.press('7')
+        pyautogui.press('7', _pause=False, interval=0.01)
     for i in range(10):
-        pyautogui.press('4')
+        pyautogui.press('4', _pause=False, interval=0.01)
     for i in range(10):
-        pyautogui.press('5')
+        pyautogui.press('5', _pause=False, interval=0.01)
     for i in range(10):
-        pyautogui.press('2')
+        pyautogui.press('2', _pause=False, interval=0.01)
 
     time.sleep(5)
     upgrade_tank()
@@ -166,12 +166,13 @@ points = Points()
 thread_move_right_left = Thread(target=move_right_left, args=(points,))
 thread_move_right_left.start()
 
-thread_move_up_down = Thread(target=move_up_down, args=(points,))
+points2 = Points()
+thread_move_up_down = Thread(target=move_up_down, args=(points2,))
 thread_move_up_down.start()
 
-points2 = Points()
-thread_shooting = Thread(target=shooting, args=(points2,))
-thread_shooting.start()
+points3 = Points()
+#thread_shooting = Thread(target=shooting, args=(points3,))
+#thread_shooting.start()
 
 
 #while not break_list:
