@@ -8,7 +8,6 @@ import queue
 from threading import Thread
 import pyautogui
 import keyboard
-
 queue_enemy = queue.Queue()
 queue_point_to_eat = queue.Queue()
 
@@ -23,12 +22,15 @@ def find_point_to_eat(points, screen, width, height):
     queue_point_to_eat.put((point_x, point_y))
 
 
-def shooting(points):
+def shooting():
+    points4 = Points()
     (screen, width, height) = Points.get_screen()
-    thread_enemy = Thread(target=find_enemy, args=(points, screen, width, height))
+    thread_enemy = Thread(target=find_enemy, args=(points4, screen, width, height))
     thread_enemy.start()
 
-    thread_points_to_eat = Thread(target=find_point_to_eat, args=(points, screen, width, height))
+    points5 = Points()
+    (screen2, width2, height2) = Points.get_screen()
+    thread_points_to_eat = Thread(target=find_point_to_eat, args=(points5, screen2, width2, height2))
     thread_points_to_eat.start()
 
     thread_enemy.join()
@@ -42,7 +44,7 @@ def shooting(points):
             pyautogui.moveTo(point_eat_x, point_eat_y)
 
     time.sleep(0.05)
-    shooting(points)
+    shooting()
 
 
 def key_press(key, press_down):
@@ -170,8 +172,7 @@ points2 = Points()
 thread_move_up_down = Thread(target=move_up_down, args=(points2,))
 thread_move_up_down.start()
 
-points3 = Points()
-thread_shooting = Thread(target=shooting, args=(points3,))
+thread_shooting = Thread(target=shooting)
 thread_shooting.start()
 
 
