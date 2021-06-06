@@ -62,58 +62,61 @@ def move_right_left(points):
         if dist > 100:
             if center_of_screen_x < friend_x:
                 key_press('right', True)
-                while center_of_screen_x < friend_x:
+                while center_of_screen_x < friend_x - 70:
                     (screen, width, height) = Points.get_screen()
                     center_of_screen_x = int(width / 2)
                     (friend_x, friend_y) = points.detect_closest_friend(screen, width, height)
                 key_press('right', False)
+                key_press('left', True)
+                time.sleep(0.1)
+                key_press('left', False)
             else:
                 key_press('left', True)
-                while center_of_screen_x > friend_x:
+                while center_of_screen_x > friend_x + 70:
                     (screen, width, height) = Points.get_screen()
                     center_of_screen_x = int(width / 2)
                     (friend_x, friend_y) = points.detect_closest_friend(screen, width, height)
                 key_press('left', False)
+                key_press('right', True)
+                time.sleep(0.1)
+                key_press('right', False)
 
-        time.sleep(0.1)
-        move_right_left(points)
+    time.sleep(0.1)
+    move_right_left(points)
 
 
-def moving(points):
+def move_up_down(points):
     (screen, width, height) = Points.get_screen()
     (friend_x, friend_y) = points.detect_closest_friend(screen, width, height)
+    center_of_screen_x = int(width / 2)
+    center_of_screen_y = int(height / 2)
 
     if friend_x != -1:
-        center_of_screen_x = int(width / 2)
-        center_of_screen_y = int(height / 2)
         dist = math.hypot(center_of_screen_x - friend_x, center_of_screen_y - friend_y)
         if dist > 100:
-            if center_of_screen_x < friend_x:
-                key_press('right', True)
-            else:
-                key_press('right', False)
-            if center_of_screen_x > friend_x:
-                key_press('left', True)
-            else:
-                key_press('left', False)
             if center_of_screen_y < friend_y:
                 key_press('down', True)
-            else:
+                while center_of_screen_y < friend_y - 70:
+                    (screen, width, height) = Points.get_screen()
+                    center_of_screen_y = int(height / 2)
+                    (friend_x, friend_y) = points.detect_closest_friend(screen, width, height)
                 key_press('down', False)
-            if center_of_screen_y > friend_y:
                 key_press('up', True)
-            else:
+                time.sleep(0.1)
                 key_press('up', False)
-        else:
-            key_press('left', False)
-            key_press('right', False)
-            key_press('up', False)
-            key_press('down', False)
+            else:
+                key_press('up', True)
+                while center_of_screen_y > friend_y + 70:
+                    (screen, width, height) = Points.get_screen()
+                    center_of_screen_y = int(height / 2)
+                    (friend_x, friend_y) = points.detect_closest_friend(screen, width, height)
+                key_press('up', False)
+                key_press('down', True)
+                time.sleep(0.1)
+                key_press('down', False)
 
-        time.sleep(0.1)
-        moving(points)
-        #points.add_point(Point([0, 0, 250], friend_x, friend_y))
-
+    time.sleep(0.1)
+    move_up_down(points)
 
 def upgrade_tank():
     for i in range(10):
@@ -146,9 +149,11 @@ thread_break_loop = Thread(target=break_loop, args=(break_list,))
 thread_break_loop.start()
 
 points = Points()
-thread_moving = Thread(target=move_right_left, args=(points,))
-thread_moving.start()
+thread_move_right_left = Thread(target=move_right_left, args=(points,))
+thread_move_right_left.start()
 
+thread_move_up_down = Thread(target=move_up_down, args=(points,))
+thread_move_up_down.start()
 
 #while not break_list:
     #time.sleep(0.1)

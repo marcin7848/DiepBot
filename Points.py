@@ -1,6 +1,7 @@
 import math
 
 import PIL.ImageGrab
+import numpy
 import numpy as np
 import win32gui, win32ui, win32api, win32con
 from win32api import GetSystemMetrics
@@ -33,6 +34,7 @@ class Points:
         screen = PIL.ImageGrab.grab()
         width, height = screen.size
         screen = np.array(screen)
+
         return screen, width, height
 
     @staticmethod
@@ -64,30 +66,29 @@ class Points:
             [88, 88, 88]  # grey
         ]
 
-        return self.__detect_closest_point(colors_boundaries_friends, screen, width, height)
+        (closest_friend_x, closest_friend_y) = self.__detect_closest_point(colors_boundaries_friends, screen, width, height)
+        return (closest_friend_x, closest_friend_y+30)
 
     @staticmethod
     def __detect_closest_point(colors_boundaries, screen, width, height):
         center_of_screen_x = int(width / 2)
         center_of_screen_y = int(height / 2)
-        y_points = []
-        x_points = []
+
+        closest_point_x = -1
+        closest_point_y = -1
+        distance = 999999
 
         for rgb in colors_boundaries:
             p_y, p_x = np.where(np.all(screen == rgb, axis=2))
-            y_points.extend(p_y)
-            x_points.extend(p_x)
+            for idx in range(len(p_x)):
+                dist = math.hypot(center_of_screen_x - p_x[idx], center_of_screen_y - p_y[idx])
+                if distance > dist:
+                    distance = dist
+                    closest_point_x = p_x[idx]
+                    closest_point_y = p_y[idx]
 
-        closest_point_idx = -1
-        distance = 999999
-
-        for idx in range(len(x_points)):
-            dist = math.hypot(center_of_screen_x - x_points[idx], center_of_screen_y - y_points[idx])
-            if distance > dist:
-                distance = dist
-                closest_point_idx = idx
-
-        if closest_point_idx == -1:
+        if closest_point_x == -1:
             return -1, -1
 
-        return x_points[closest_point_idx], y_points[closest_point_idx]
+        return closest_point_x, closest_point_y
+
