@@ -14,34 +14,36 @@ queue_enemy = queue.Queue()
 queue_point_to_eat = queue.Queue()
 
 
-def find_enemy(screen, width, height):
+def find_enemy(points, screen, width, height):
     (enemy_x, enemy_y) = points.detect_closest_enemy(screen, width, height)
     queue_enemy.put((enemy_x, enemy_y))
 
 
-def find_point_to_eat(screen, width, height):
+def find_point_to_eat(points, screen, width, height):
     (point_x, point_y) = points.detect_point_to_eat(screen, width, height)
     queue_point_to_eat.put((point_x, point_y))
 
 
-def shooting(screen, width, height):
-    thread_enemy = Thread(target=find_enemy, args=(screen, width, height))
+def shooting(points):
+    (screen, width, height) = Points.get_screen()
+    thread_enemy = Thread(target=find_enemy, args=(points, screen, width, height))
     thread_enemy.start()
 
-    thread_points_to_eat = Thread(target=find_point_to_eat, args=(screen, width, height))
+    thread_points_to_eat = Thread(target=find_point_to_eat, args=(points, screen, width, height))
     thread_points_to_eat.start()
 
     thread_enemy.join()
     (enemy_pos_x, enemy_pos_y) = queue_enemy.get()
     if enemy_pos_x != -1:
-        #points.add_point(Point([0, 0, 250], enemy_x, enemy_y))
         pyautogui.moveTo(enemy_pos_x, enemy_pos_y)
     else:
         thread_points_to_eat.join()
         (point_eat_x, point_eat_y) = queue_point_to_eat.get()
         if point_eat_x != -1:
-            #points.add_point(Point([0, 0, 250], point_x, point_y))
             pyautogui.moveTo(point_eat_x, point_eat_y)
+
+    time.sleep(0.05)
+    shooting(points)
 
 
 def key_press(key, press_down):
@@ -150,7 +152,7 @@ def break_loop(break_list):
     keyboard.wait("p")
     break_list.append(True)
     print('P')
-
+    os._exit(0)
 
 
 thread_upgrade = Thread(target=upgrade_tank)
@@ -167,17 +169,15 @@ thread_move_right_left.start()
 thread_move_up_down = Thread(target=move_up_down, args=(points,))
 thread_move_up_down.start()
 
+points2 = Points()
+thread_shooting = Thread(target=shooting, args=(points2,))
+thread_shooting.start()
+
+
 #while not break_list:
     #time.sleep(0.1)
     #points = Points()
     #(screenx, widthx, heightx) = Points.get_screen()
-
-
-
-    #thread_shooting = Thread(target=shooting, args=(screenx, widthx, heightx))
-    #thread_shooting.start()
-
-
 
     # points.draw_points()
 
