@@ -66,6 +66,9 @@ def move_right_left(points):
                     (screen, width, height) = Points.get_screen()
                     center_of_screen_x = int(width / 2)
                     (friend_x, friend_y) = points.detect_closest_friend(screen, width, height)
+                    if friend_x == -1:
+                        break
+
                 key_press('right', False)
                 key_press('left', True)
                 time.sleep(0.1)
@@ -76,6 +79,9 @@ def move_right_left(points):
                     (screen, width, height) = Points.get_screen()
                     center_of_screen_x = int(width / 2)
                     (friend_x, friend_y) = points.detect_closest_friend(screen, width, height)
+                    if friend_x == -1:
+                        break
+
                 key_press('left', False)
                 key_press('right', True)
                 time.sleep(0.1)
@@ -100,6 +106,9 @@ def move_up_down(points):
                     (screen, width, height) = Points.get_screen()
                     center_of_screen_y = int(height / 2)
                     (friend_x, friend_y) = points.detect_closest_friend(screen, width, height)
+                    if friend_x == -1:
+                        break
+
                 key_press('down', False)
                 key_press('up', True)
                 time.sleep(0.1)
@@ -110,6 +119,9 @@ def move_up_down(points):
                     (screen, width, height) = Points.get_screen()
                     center_of_screen_y = int(height / 2)
                     (friend_x, friend_y) = points.detect_closest_friend(screen, width, height)
+                    if friend_x == -1:
+                        break
+
                 key_press('up', False)
                 key_press('down', True)
                 time.sleep(0.1)
