@@ -171,8 +171,8 @@ thread_move_up_down = Thread(target=move_up_down, args=(points2,))
 thread_move_up_down.start()
 
 points3 = Points()
-#thread_shooting = Thread(target=shooting, args=(points3,))
-#thread_shooting.start()
+thread_shooting = Thread(target=shooting, args=(points3,))
+thread_shooting.start()
 
 
 #while not break_list:
