@@ -28,7 +28,8 @@ class Points:
         thread = Thread(target=self.__draw_points)
         thread.start()
 
-    def get_screen(self):
+    @staticmethod
+    def get_screen():
         screen = PIL.ImageGrab.grab()
         width, height = screen.size
         screen = np.array(screen)
